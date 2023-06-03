@@ -16,6 +16,10 @@
             {
                 "allowAfterThis": true
             }
+        ],
+        "indent": [
+            "error",
+            2
         ]
     }
 }
