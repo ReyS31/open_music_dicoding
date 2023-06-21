@@ -152,8 +152,6 @@ class PlaylistsService {
     const ownerAccess = await this.verifyPlaylistOwner(playlistId, userId);
 
     if (collaboratorAccess !== 'success' && ownerAccess !== 'success') {
-      console.log(collaboratorAccess);
-      console.log(ownerAccess);
       if (ownerAccess === 'forbidden') throw new AuthorizationError('Anda tidak berhak mengakses resource ini');
       if (ownerAccess === 'not found') throw new NotFoundError('Playlist tidak ditemukan');
       if (collaboratorAccess === 'not verified') throw new InvariantError('Kolaborasi gagal diverifikasi');
