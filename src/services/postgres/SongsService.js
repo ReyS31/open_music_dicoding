@@ -2,7 +2,7 @@ const { Pool } = require('pg');
 const { nanoid } = require('nanoid');
 
 const InvariantError = require('../../exceptions/InvariantError');
-const { mapDBToModelSong } = require('../../utils');
+const { mapDBToSong } = require('../../utils');
 const NotFoundError = require('../../exceptions/NotFoundError');
 
 class SongsService {
@@ -21,7 +21,6 @@ class SongsService {
     };
 
     const result = await this._pool.query(query);
-    console.log(result);
     if (!result.rows[0].id) {
       throw new InvariantError('Lagu gagal ditambahkan');
     }
@@ -51,7 +50,6 @@ class SongsService {
       text: queryString,
       values,
     };
-    console.log(query);
     const result = await this._pool.query(query);
     return result.rows;
   }
@@ -76,7 +74,7 @@ class SongsService {
       throw new NotFoundError('Lagu tidak ditemukan');
     }
 
-    return result.rows.map(mapDBToModelSong)[0];
+    return result.rows.map(mapDBToSong)[0];
   }
 
   async editSongById(id, {
@@ -86,9 +84,7 @@ class SongsService {
       text: 'UPDATE songs SET title = $1, year = $2, performer = $4, genre = $3, duration = $5, album_id = $6 WHERE id = $7 RETURNING id',
       values: [title, year, genre, performer, duration, albumId, id],
     };
-    console.log(query);
     const result = await this._pool.query(query);
-    console.log(result);
     if (!result.rows.length) {
       throw new NotFoundError('Gagal memperbarui lagu. Id tidak ditemukan');
     }
