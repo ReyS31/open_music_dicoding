@@ -27,4 +27,18 @@ const mapDBToPlaylist = ({
   username,
 });
 
-module.exports = { mapDBToSong, mapDBToPlaylist };
+const mapDBToAlbum = ({
+  id,
+  name,
+  year,
+  cover,
+  songs,
+}) => ({
+  id,
+  name,
+  year,
+  coverUrl: cover,
+  songs,
+});
+
+module.exports = { mapDBToSong, mapDBToPlaylist, mapDBToAlbum };

@@ -3,6 +3,7 @@ const { nanoid } = require('nanoid');
 
 const InvariantError = require('../../exceptions/InvariantError');
 const NotFoundError = require('../../exceptions/NotFoundError');
+const { mapDBToAlbum } = require('../../utils');
 
 class AlbumsService {
   constructor() {
@@ -36,8 +37,7 @@ class AlbumsService {
     if (!result.rows.length) {
       throw new NotFoundError('Album tidak ditemukan');
     }
-
-    return result.rows[0];
+    return mapDBToAlbum(result.rows[0]);
   }
 
   async editAlbumById(id, { name, year }) {
@@ -63,6 +63,19 @@ class AlbumsService {
 
     if (!result.rows.length) {
       throw new NotFoundError('Album gagal dihapus. Id tidak ditemukan');
+    }
+  }
+
+  async editAlbumCover(id, { cover }) {
+    const query = {
+      text: 'UPDATE albums SET cover = $1 WHERE id = $2 RETURNING id',
+      values: [cover, id],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rows.length) {
+      throw new NotFoundError('Gagal memperbarui catatan. Id tidak ditemukan');
     }
   }
 }
